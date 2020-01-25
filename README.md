@@ -4,7 +4,10 @@
 ### Kullback-Leibler divergence
 
 ```python
-def kld_loss(outputs, labels, teacher_outputs):
+import torch
+import torch.nn.functional as F
+
+def KLD_loss(outputs, labels, teacher_outputs):
     alpha = 0.9
     T = 5 # Temperature
     outputs = F.softmax(outputs/T, dim=1)
@@ -19,6 +22,9 @@ def kld_loss(outputs, labels, teacher_outputs):
 ###  Jessen-Shannon Divergence
 
 ```python
+import torch
+import torch.nn.functional as F
+
 def JSD_loss(outputs1, labels, outputs2):
     alpha = 0.9
     T = 5
@@ -32,3 +38,16 @@ def JSD_loss(outputs1, labels, outputs2):
     return KD_loss
 ```
 ***
+
+### simple implementation
+
+```python
+   for batch_idx, (inputs, targets) in enumerate(trainloader):
+        inputs, targets = inputs.to(device), targets.to(device)
+        optimizer.zero_grad()
+        outputs1 = net1(inputs)
+        outputs2 = net2(inputs)
+        loss = KLD_loss(outputs1, targets, outputs2)
+        # loss = JSD_loss(outputs1, targets, outputs2)
+        loss.backward()
+```
